@@ -1,0 +1,31 @@
+TASK_COV_SIMU <- "covariance function simulation"
+TASK_COV_PARM <- "covariance parameter simulation"
+TASK_VAR_SIM  <- "variance simulation"
+TASK_VAR_EST  <- "variance estimation"
+TASK_TRUE_CI  <- "true confidential interval simulation"
+TASK_SIGN_TEST <- "signification test for models"
+
+task <- TASK_COV_SIMU
+
+n <- 48
+d <- 1000
+
+dataConf <- list(name = "twobalanceClassificationSample", 
+                 type = "classification", 
+                 n = n,
+                 d = d,
+                 signal = TRUE
+)
+
+cvConf <- list(name = "held_out",                
+               n = n,
+               n1 = n%/%2)
+
+algorConf <- list(name = "knn",
+                  type = "classification"                  
+)
+
+conf_TASK_COV_SIMU <- list(exchange_count = $$EXCHANGE_COUNT$$,
+                           rpt = 100000,
+                           seq_mode = FALSE,
+                           n1 = n%/%2)

@@ -1,0 +1,74 @@
+{
+  "dataConfs" : [
+    {
+      "name" : "hdRegrDataFL(y)", 
+      "type" : "regression(y)", 
+      "n"    : "40(n)",
+      "d"    : "$$d$$(n)"
+    }
+  ],
+  "algorConfs" : [
+    {
+      "name" : "LassoModel(y)",
+      "type" : "regression(y)"                  
+    },
+    {
+        "name"         : "lmRidgeModel(y)",
+        "type"         : "regression(y)",
+        "no_intercept" : "TRUE(n)"
+    }
+  ],
+  "cvConfs" : [
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "3(n)", 
+          "n" : "40(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "5(n)", 
+          "n" : "40(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "7(n)", 
+          "n" : "40(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "11(n)", 
+          "n" : "40(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "3(n)",
+          "n"    : "40(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "5(n)",
+          "n"    : "40(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "7(n)",
+          "n"    : "40(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "11(n)",
+          "n"    : "40(n)"
+      }
+  ],
+  "conf_TASK_VAR_SIM" : {
+      "data_rep_count" : "100000(n)", 
+      "split_rep_count" : "100(n)", 
+      "var_for_index" : "0(n)",
+      "seq_mode"  : "FALSE(n)"
+  },
+  "$$d$$": ["100", "1000"]
+}

@@ -1,0 +1,194 @@
+{
+  "name" : "simulation 1 of significant test on artificial classification dataset",
+  "progdir" : "/apps/users/wrb/bmx2prog/",
+  "common" : {
+      "n" : 200
+  },
+  "dataConfs" : {
+      "yu_neco_sim1" : {
+           "name" : "two_normals_classification(y)", 
+           "type" : "classification(y)", 
+           "shortcut_name" : "yu_neco_b3x2_sim1(y)"
+      }
+  },
+  "algorConfs" : { 
+      "lr" : {
+          "name" : "linearRegrClassifier(y)", 
+          "type" : "classification(y)"
+      },
+      "rtree" : {
+          "name" : "classificationTree(y)",
+          "type" : "classification(y)", 
+          "method" : "class(y)"
+      }
+  },
+  "cvConfs" : {
+      "b3x2" : {
+          "name" : "balancedmx2cv(y)", 
+          "m" : 3, 
+          "n" : "n(n)"
+      },
+      "r5x2" : {
+          "name" : "randommxkcv(y)", 
+          "m"    : 5, 
+          "v"    : 2,
+          "n"    : "n(n)"
+      },
+      "s2fcv" : {
+           "name" : "standardVFCV(y)", 
+           "v" : 2, 
+           "n" : "n(n)"
+      }
+  },
+  "varsimConfs" : {
+    "var_sim" : {
+          "data_rep_count" : 1000, 
+          "split_rep_count" : 1, 
+          "var_for_index" : 0,
+          "seq_mode"  : true,
+          "cov_print" : false
+    }
+  },
+  "veConfs" : {        
+        "dietterich_var" : {
+            "name" : "var_est_dietterich_mx2cv(y)",            
+            "m" : 5
+        },
+        "s2fve" :{ 
+            "name" : "sample_variance_estimator_vfcv(y)",
+            "v" : 2
+        },
+        "bmx2ve2" : {
+            "name" : "var_est3_mx2cv(y)",
+            "m" : 3,
+            "minu_one" : false
+        }
+  },
+  "signtestConfs" : {      
+        "t_test_bmx2cv":{                            
+                            "test_type" : "t_test_bmx2cv(y)",
+                            "alpha"     : "0.05(n)", 
+                            "freedegree": 5, 
+                            "true_mu"   : 0.0, 
+                            "const"     : 1, 
+                            "m"         : 3, 
+                            "rpt"       : 1000
+                         },      
+        "t_dietterich": {
+                    "test_type" : "Dietterich_t_test(y)",
+                    "alpha" : 0.05, 
+                    "freedegree" : 5, 
+                    "true_mu" : 0.0, 
+                    "const" : 1, 
+                    "m" : 5, 
+                    "rpt" : 1000,      
+                    "numeratorIndex" : 1
+            },
+        "f_alpaydin" : {
+                    "test_type" : "Alpaydin_f_test(y)",
+                    "alpha" : 0.05, 
+                    "freedegree" : 10,
+                    "freedegree2" : 5,
+                    "true_mu" : 0.0, 
+                    "const" : 1, 
+                    "rpt" : 1000,
+                    "m" : 5                    
+           },
+        "ccv_st" : {
+                  "test_type" : "corrected_vfcv_paired_t_test(y)",
+                  "alpha" : 0.05, 
+                  "freedegree" : 1, 
+                  "true_mu" : 0.0, 
+                  "const" : 1, 
+                  "v" : 2,                             
+                  "rho" : 0.5
+        },
+        "cv_st" : {
+                "test_type" : "vfcv_paired_t_test(y)",
+                "alpha" : 0.05, 
+                "freedegree" : 1, 
+                "true_mu" : 0.0, 
+                "const" : 1, 
+                "v" : 2
+        }
+   },
+   "exprs": {
+        "r5x2_vs_lr" : {
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "yu_neco_sim1",
+            "cvConf"    : "r5x2",
+            "algorConf" : "lr",
+            "conf_TASK_VAR_SIM" : "var_sim"
+        },
+		"r5x2_vs_rtree" : {
+			"task_name" : "TASK_VAR_SIM",
+			"dataConf"  : "yu_neco_sim1",
+			"cvConf"    : "r5x2",
+			"algorConf" : "rtree",
+			"conf_TASK_VAR_SIM" : "var_sim"
+		},
+		"s2fcv_vs_lr" : {
+			"task_name" : "TASK_VAR_SIM",
+			"dataConf"  : "yu_neco_sim1",
+			"cvConf"    : "s2fcv",
+			"algorConf" : "lr",
+			"conf_TASK_VAR_SIM" : "var_sim"
+		},
+		"s2fcv_vs_rtree" : {
+			"task_name" : "TASK_VAR_SIM",
+			"dataConf" : "yu_neco_sim1",
+			"cvConf"   : "s2fcv",
+			"algorConf" : "rtree",
+			"conf_TASK_VAR_SIM" : "var_sim"
+		},
+		"b3x2_vs_lr" : {
+			"task_name" : "TASK_VAR_SIM",
+			"dataConf" : "yu_neco_sim1",
+			"cvConf"   : "b3x2",
+			"algorConf" : "lr",
+			"conf_TASK_VAR_SIM" : "var_sim"
+		},
+		"b3x2_vs_rtree" : {
+			"task_name" : "TASK_VAR_SIM",
+			"dataConf" : "yu_neco_sim1",
+			"cvConf"   : "b3x2",
+			"algorConf" : "rtree",
+			"conf_TASK_VAR_SIM" : "var_sim"
+		},
+        "cvttest" : {
+            "task_name" : "TASK_SIGN_TEST",
+			"var_sim1"  : "s2fcv_vs_lr",
+			"var_sim2"  : "s2fcv_vs_rtree",
+			"veConf"   : "s2fve",
+			"test"      : "cv_st"
+        },
+        "ccvttest" : {
+			"task_name" : "TASK_SIGN_TEST",
+			"var_sim1"  : "s2fcv_vs_lr",
+			"var_sim2"  : "s2fcv_vs_rtree",
+			"veConf"   : "s2fve",
+			"test"      : "ccv_st"
+        },
+        "t5x2test" : {
+			"task_name" : "TASK_SIGN_TEST",
+			"var_sim1"  : "r5x2_vs_lr",
+			"var_sim2"  : "r5x2_vs_rtree",
+			"veConf"   : "dietterich_var",
+			"test"      : "t_dietterich"
+        },
+        "f5x2test" : {
+			"task_name" : "TASK_SIGN_TEST",
+			"var_sim1"  : "r5x2_vs_lr",
+			"var_sim2"  : "r5x2_vs_rtree",
+			"veConf"   : "dietterich_var",
+			"test"      : "f_alpaydin"
+        },
+        "b3x2test" : {
+			"task_name" : "TASK_SIGN_TEST",
+			"var_sim1"  : "b3x2_vs_lr",
+			"var_sim2"  : "b3x2_vs_rtree",
+			"veConf"   : "bmx2ve2",
+			"test"      : "t_test_bmx2cv"
+        }
+   }
+}

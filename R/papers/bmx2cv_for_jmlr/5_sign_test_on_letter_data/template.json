@@ -1,0 +1,185 @@
+{
+  "name" : "sign test exprs for letter data",
+  "progdir": "/apps/users/wrb/bmx2prog",
+  "common" : {
+        "n" : 300,
+        "m" : 5,
+        "f" : 8
+  },
+  "dataConfs" : {
+      "binary_letter_data" : {
+           "name" : "binaryLetterData(y)", 
+           "type" : "classification(y)",
+           "n"    : "n(n)",
+           "y_balance" : true
+      }
+  },
+  "algorConfs" : {
+      "cla_tree" : {
+          "name" : "classificationTree(y)",
+          "type" : "classification(y)",
+          "method" : "anova(y)"
+      },
+      "first_nn" : {
+          "name" : "firstNearestNeighborhood(y)",
+          "type" : "classification(y)",
+          "w"    : 25
+      }
+  },
+  "cvConfs" : {
+      "bmx2cv" : {
+          "name" : "balancedmx2cv(y)", 
+          "m" : "m(n)", 
+          "n" : "n(n)"
+      },
+      "rmx2cv" : {
+          "name" : "randommxkcv(y)", 
+          "m" : 5, 
+          "n" : "n(n)",
+          "v" : 2
+      }
+  },
+  "varsimConfs" : {
+      "var_sim" : {
+          "data_rep_count" : 1000, 
+          "split_rep_count" : 1, 
+          "var_for_index" : 0,
+          "seq_mode" : true,
+          "cov_print" : true
+      }
+  },
+  "veConfs" : {
+      "bmx2_var3": {
+                "name" : "var_est3_mx2cv(y)",                
+                "m" : "m(n)",
+                "minu_one" : true
+            },
+        "bmx2_var4": {
+                "name" : "var_est_general_mx2cv(y)",                
+                "m" : "m(n)",
+                "lambda_1" : "1/(2*m)(n)",
+                "lambda_2" : "(m+1)/(m*(m-1))(n)"
+        },
+        "dietterich_var" : {
+            "name" : "var_est_dietterich_mx2cv(y)",            
+            "m" : "m(n)"
+        }
+  },
+  "signtestConfs" : {      
+        "t_test_bmx2cv":{                            
+                            "test_type" : "t_test_bmx2cv(y)",
+                            "alpha"     : "0.05(n)", 
+                            "freedegree": "f(n)", 
+                            "true_mu"   : 0.0, 
+                            "const"     : 1, 
+                            "m"         : "m(n)", 
+                            "rpt"       : 1000
+                         },      
+        "t_dietterich": {
+                    "test_type" : "Dietterich_t_test(y)",
+                    "alpha" : 0.05, 
+                    "freedegree" : "m(n)", 
+                    "true_mu" : 0.0, 
+                    "const" : 1, 
+                    "m" : "m(n)", 
+                    "rpt" : 1000,      
+                    "numeratorIndex" : 1
+            },
+        "f_alpaydin" : {
+                    "test_type" : "Alpaydin_f_test(y)",
+                    "alpha" : 0.05, 
+                    "freedegree" : "2*m(n)",
+                    "freedegree2" : "m(n)",
+                    "true_mu" : 0.0, 
+                    "const" : 1, 
+                    "rpt" : 1000,
+                    "m" : 5                    
+       }
+  }, 
+  "exprs" : {
+      "flow_var_sim1" : {          
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "binary_letter_data",
+            "cvConf"    : "rmx2cv",
+            "algorConf" : "cla_tree",
+            "conf_TASK_VAR_SIM" : "var_sim"
+      },
+      "flow_var_sim2" : {            
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "binary_letter_data",
+            "cvConf"    : "rmx2cv",
+            "algorConf" : "first_nn",
+            "conf_TASK_VAR_SIM" : "var_sim"
+        },
+      "flow_sign_test_mx2" :   {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1", 
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"    : "bmx2_var3",
+          "test"      : "t_test_bmx2cv"
+      },      
+      "flow_sign_test_mx2" :   {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1", 
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"    : "bmx2_var4",
+          "test"      : "t_test_bmx2cv"
+      },
+      "flow_sign_test_dietterich" : {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1",
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"   : "dietterich_var",
+          "test"      : "t_dietterich"
+      },
+      "flow_sign_test_alpaydin" : {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1",
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"   : "dietterich_var",
+          "test"      : "f_alpaydin"
+      },
+      "flow_var_sim1_b" : {          
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "binary_letter_data",
+            "cvConf"    : "bmx2cv",
+            "algorConf" : "cla_tree",
+            "conf_TASK_VAR_SIM" : "var_sim"
+      },
+      "flow_var_sim2_b" : {            
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "binary_letter_data",
+            "cvConf"    : "bmx2cv",
+            "algorConf" : "first_nn",
+            "conf_TASK_VAR_SIM" : "var_sim"
+        },
+      "flow_sign_test_mx2_b" :   {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1_b", 
+          "var_sim2"  : "flow_var_sim2_b",
+          "veConf"    : "bmx2_var3",
+          "test"      : "t_test_bmx2cv"
+      },      
+      "flow_sign_test_mx2_b" :   {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1_b", 
+          "var_sim2"  : "flow_var_sim2_b",
+          "veConf"    : "bmx2_var4",
+          "test"      : "t_test_bmx2cv"
+      },
+      "flow_sign_test_dietterich_b" : {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1_b",
+          "var_sim2"  : "flow_var_sim2_b",
+          "veConf"   : "dietterich_var",
+          "test"      : "t_dietterich"
+      },
+      "flow_sign_test_alpaydin_b" : {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1_b",
+          "var_sim2"  : "flow_var_sim2_b",
+          "veConf"   : "dietterich_var",
+          "test"      : "f_alpaydin"
+      }
+  }
+}

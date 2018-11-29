@@ -1,0 +1,79 @@
+{
+  "dataConfs" : [
+    {
+      "name":"regrDataBG_nooutliers(y)",
+      "type" : "regression(y)",
+      "n" : "$$n$$(n)",
+      "d" : "3(n)"
+    }
+  ],
+  "algorConfs" : [
+    {
+        "name" : "linearModel(y)",
+        "type" : "regression(y)",
+        "no_intercept" : "TRUE(n)"
+    },
+    {
+        "name" : "lmRidgeModel(y)",
+        "type" : "regression(y)",
+        "no_intercept" : "TRUE(n)"
+    },
+    {
+        "name" : "LassoModel(y)",
+        "type" : "regression(y)"
+    }
+  ],
+  "cvConfs" : [
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "3(n)", 
+          "n" : "$$n$$(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "5(n)", 
+          "n" : "$$n$$(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "7(n)", 
+          "n" : "$$n$$(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "11(n)", 
+          "n" : "$$n$$(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "3(n)",
+          "n"    : "$$n$$(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "5(n)",
+          "n"    : "$$n$$(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "7(n)",
+          "n"    : "$$n$$(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "11(n)",
+          "n"    : "$$n$$(n)"
+      }
+  ],
+  "conf_TASK_VAR_SIM" : {
+      "data_rep_count" : "100000(n)", 
+      "split_rep_count" : "100(n)", 
+      "var_for_index" : "0(n)",
+      "seq_mode"  : "FALSE(n)"
+  },
+  "$$n$$": [40]
+}

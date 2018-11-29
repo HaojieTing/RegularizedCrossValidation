@@ -1,0 +1,35 @@
+#这个配置和../../neco_b3x2_yu_2014/5_real_example_1
+#_var_bar_on_letter_data中的一样可只模拟一遍。
+#配置文件如下:
+
+{
+  "dataConfs" : [
+    {
+      "name":"binaryLetterData(y)",
+      "type" : "regression(y)",
+      "n" : "$$n$$(n)",
+      "y_balance" : "TRUE(n)"
+    }
+  ],
+  "algorConfs" : [
+    {
+        "name" : "classificationTree(y)",
+        "type" : "classification(y)",
+        "method" : "anova(y)"
+    }
+  ],
+  "cvConfs" : [      
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "3(n)",
+          "n"    : "$$n$$(n)"
+      }      
+  ],
+  "conf_TASK_VAR_SIM" : {
+      "data_rep_count" : "100000(n)", 
+      "split_rep_count" : "1(n)", 
+      "var_for_index" : "0(n)",
+      "seq_mode"  : "FALSE(n)"
+  },
+  "$$n$$": [40]
+}

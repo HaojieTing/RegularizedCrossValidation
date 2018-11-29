@@ -1,0 +1,146 @@
+{
+  "name" : "r5x2cv test comparision",
+  "progdir" : "/apps/users/wrb/bmx2prog/",
+  "common"   : {
+      "n"   : 200,
+      "m"   : 5,
+      "f"   : 8
+  },
+  "dataConfs" : { 
+    "two_norms" : {
+       "name" : "two_normals_classification(y)", 
+       "type" : "classification(y)", 
+       "n0"   : "n %/% 2(n)",
+       "n1"   : "n - n%/%2(n)",
+       "mu0"  : "c(0,0)(n)",
+       "mu1"  : "c(1,1)(n)",
+       "sigma0" : "diag(2)(n)",
+       "sigma1" : "(1/6) * diag(2)(n)"
+    }
+  },
+  "algorConfs": {
+      "linearRegr" : {
+        "name" : "linearRegrClassifier(y)",
+        "type" : "classification(y)"
+      },
+      "cla_tree" : {
+        "name" : "classificationTree(y)",
+        "type" : "classification(y)",
+        "method" : "anova(y)"
+      }
+  },
+  "cvConfs" : {
+      "bmx2cv" : {
+          "name" : "balancedmx2cv(y)", 
+           "m" : "m(n)", 
+           "n" : "n(n)"
+        },
+      "rmx2cv" :{
+          "name" : "randommxkcv(y)", 
+          "m"    : "m(n)", 
+          "n"    : "n(n)",
+          "v"    : 2      
+      }
+    },
+  "varsimConfs" : {
+      "var_sim" : {
+          "data_rep_count" : 1000, 
+          "split_rep_count" : 1, 
+          "var_for_index" : "0(n)",
+          "seq_mode"  : true,
+          "cov_print" : false
+       }
+  },
+  "veConfs" : {
+        "bmx2_var3": {
+                "name" : "var_est3_mx2cv(y)",                
+                "m" : "m(n)",
+                "minu_one" : true
+            },
+        "bmx2_var4": {
+                "name" : "var_est_general_mx2cv(y)",                
+                "m" : "m(n)",
+                "lambda_1" : "1/(2*m)(n)",
+                "lambda_2" : "(m+1)/(m*(m-1))(n)"
+        },
+        "dietterich_var" : {
+            "name" : "var_est_dietterich_mx2cv(y)",            
+            "m" : "m(n)"
+        }
+  },
+  "signtestConfs" : {      
+        "t_test_bmx2cv":{                            
+                            "test_type" : "t_test_bmx2cv(y)",
+                            "alpha"     : "0.05(n)", 
+                            "freedegree": "f(n)", 
+                            "true_mu"   : 0.0, 
+                            "const"     : 1, 
+                            "m"         : "m(n)", 
+                            "rpt"       : 1000
+                         },      
+        "t_dietterich": {
+                    "test_type" : "Dietterich_t_test(y)",
+                    "alpha" : 0.05, 
+                    "freedegree" : "m(n)", 
+                    "true_mu" : 0.0, 
+                    "const" : 1, 
+                    "m" : "m(n)", 
+                    "rpt" : 1000,      
+                    "numeratorIndex" : 1
+            },
+        "f_alpaydin" : {
+                    "test_type" : "Alpaydin_f_test(y)",
+                    "alpha" : 0.05, 
+                    "freedegree" : "2*m(n)",
+                    "freedegree2" : "m(n)",
+                    "true_mu" : 0.0, 
+                    "const" : 1, 
+                    "rpt" : 1000,
+                    "m" : 5                    
+       }
+  }, 
+  "exprs" : {
+      "flow_var_sim1" : {          
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "two_norms",
+            "cvConf"    : "rmx2cv",
+            "algorConf" : "linearRegr",
+            "conf_TASK_VAR_SIM" : "var_sim"
+      },
+      "flow_var_sim2" : {            
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "two_norms",
+            "cvConf"    : "rmx2cv",
+            "algorConf" : "cla_tree",
+            "conf_TASK_VAR_SIM" : "var_sim"
+        },
+      "flow_sign_test_mx2" :   {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1", 
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"    : "bmx2_var3",
+          "test"      : "t_test_bmx2cv"
+      },      
+      "flow_sign_test_mx2" :   {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1", 
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"    : "bmx2_var4",
+          "test"      : "t_test_bmx2cv"
+      },
+      "flow_sign_test_dietterich" : {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1",
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"   : "dietterich_var",
+          "test"      : "t_dietterich"
+      },
+      "flow_sign_test_alpaydin" : {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1",
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"   : "dietterich_var",
+          "test"      : "f_alpaydin"
+      }
+  }  
+}

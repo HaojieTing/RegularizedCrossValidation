@@ -1,0 +1,5 @@
+source("../datasets/datas.R")
+source("../crossvalidations/all_kinds_cv.R")
+source("../modelTrainAndPredict.R")
+source('../regressioner.R')
+source('../classifiers.R')

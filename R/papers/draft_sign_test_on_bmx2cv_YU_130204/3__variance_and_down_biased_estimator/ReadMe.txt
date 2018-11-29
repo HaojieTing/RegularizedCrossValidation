@@ -1,0 +1,1 @@
+这个模拟和../neco_b3x2_yu_2014/1_example1_variance_and_down_biased_estimator的模拟一样。

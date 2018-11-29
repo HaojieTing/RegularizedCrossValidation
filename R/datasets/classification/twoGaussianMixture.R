@@ -1,0 +1,19 @@
+twoGaussianMixture.DataGenerator<-function(n,p)
+{   
+  n1<-trunc(n/2)
+  n0<-n-n1  
+  mu1<-rep(0,p)
+  mu01<-rep(0.4,p/3)
+  mu02<-rep(0.3,p/3)
+  mu03<-rep(0,p/3)
+  sigma1<-diag(p)
+  sigma0<-diag(p/3)
+  x1<-mvrnorm(n1,mu1,sigma1)
+  x01<-mvrnorm(n0,mu01,sigma0)
+  x02<-mvrnorm(n0,mu02,sigma0)
+  x03<-mvrnorm(n0,mu03,sigma0)  
+  x0<-cbind(x01,x02,x03)
+  x<-rbind(x1,x0)
+  y<-c(rep(1,n1),rep(0,n0))
+  return(list(x=x,y=y))
+}

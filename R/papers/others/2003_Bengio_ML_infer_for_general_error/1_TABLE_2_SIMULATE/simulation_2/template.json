@@ -1,0 +1,73 @@
+{
+	"name" : "true confidence interval for mu of artificial regression dataset",
+	"progdir" : "/apps/users/wrb/bmx2prog/",
+	"common" : {
+		"n" : 200
+	},
+	"dataConfs" : {
+		"simple_norm" : {
+			"name" : "SimpleNormalDataSet(y)", 
+			"type" : "regression(y)",
+			"shortcut_name" : "infor_for_gene_err_sim2(y)"
+		}
+	},
+	"algorConfs" : {
+		"linearRegr" : {
+          "name" : "linearModel(y)",
+          "type" : "regression(y)",
+          "no_intercept" : false
+      },
+      "meanRegr" : {
+          "name"  : "simpleMeanRegression(y)", 
+          "type"  : "regression(y)", 
+          "n"     : "n(n)"
+      }
+	},
+	"cvConfs"  : {
+		"rlt" : {
+			"name" : "rlt(y)",
+			"n" : "n(n)",
+			"n1" : "n %/% 2(n)",
+			"m"  : 25
+		}
+	},
+	"varsimConfs" : {
+      "var_sim" : {
+          "data_rep_count" : 1000, 
+          "split_rep_count" : 1, 
+          "var_for_index" : "0(n)",
+          "seq_mode"  : true,
+          "cov_print" : false
+       }
+	},
+	"dataCTIConfs" : {
+		"data_cti_1" : {
+			"alpha" : 0.5,
+			"rpt"   : 1000,
+			"est_beta_close_form" : true
+		}
+	},
+	"veConfs" : {},
+	"signtestConfs" : {},
+	"exprs" : {
+		"flow_varsim_lr" : {
+			"task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "simple_norm",
+            "cvConf"    : "rlt",
+            "algorConf" : "linearRegr",
+            "conf_TASK_VAR_SIM" : "var_sim"
+		},
+		"flow_varsim_mean" : {            
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "simple_norm",
+            "cvConf"    : "rlt",
+            "algorConf" : "meanRegr",
+            "conf_TASK_VAR_SIM" : "var_sim"
+        },
+		"flow_datacti_lr" : {
+			"task_name" : "TASK_TRUECI",
+			"var_sim"	: ["flow_varsim_mean", "flow_varsim_lr"],
+			"datacti"   : "data_cti_1"
+		}		
+	}
+}

@@ -1,0 +1,79 @@
+{
+  "dataConfs" : [
+    {
+      "name" : "twobalanceClassificationSample(y)", 
+      "type" : "classification(y)", 
+      "n" : "48(n)",
+      "d" : "$$d$$(n)",
+      "signal" : "TRUE(n)"
+    }
+  ],
+  "algorConfs": [
+      {
+        "name" : "knn(y)",
+        "type" : "classification(y)"
+      },
+      {
+        "name" : "classificationTree(y)",
+        "type" : "classification(y)",
+        "method" : "class(y)"
+      },
+      {
+        "name" : "svm(y)",
+        "type" : "classification(y)" 
+      }
+  ],
+  "cvConfs" : [
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "3(n)", 
+          "n" : "48(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "5(n)", 
+          "n" : "48(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "7(n)", 
+          "n" : "48(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "randommxkcv(y)", 
+          "m" : "11(n)", 
+          "n" : "48(n)",
+          "v" : "2(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "3(n)",
+          "n"    : "48(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "5(n)",
+          "n"    : "48(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "7(n)",
+          "n"    : "48(n)"
+      },
+      {
+          "name" : "balancedmx2cv(y)",
+          "m"    : "11(n)",
+          "n"    : "48(n)"
+      }
+  ],
+  "conf_TASK_VAR_SIM" : {
+        "data_rep_count" : "100000(n)", 
+        "split_rep_count" : "100(n)", 
+        "var_for_index" : "0(n)",
+        "seq_mode"  : "FALSE(n)"
+    },
+  "$$d$$": ["10", "100", "1000"]
+}

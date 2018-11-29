@@ -1,0 +1,9 @@
+Package: regcv
+Type: Package
+Title: Provides several types of regularized cross-validation methods.
+Version: 1.0
+Data: 2015/9/1
+Author: Wang Ruibo
+Maintainer: Wang Ruibo wangruibo@sxu.edu.cn
+Description: 
+License: MIT Licence

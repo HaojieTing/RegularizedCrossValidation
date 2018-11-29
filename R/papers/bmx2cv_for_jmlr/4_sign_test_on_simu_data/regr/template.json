@@ -1,0 +1,253 @@
+{
+  "name" : "r5x2cv test comparision",
+  "progdir" : "/apps/users/wrb/bmx2prog/",
+  "common"   : {
+      "n"   : 2000,
+      "m"   : 5,
+      "f"   : 8
+  },
+  "dataConfs" : { 
+    "simple_norm" : {
+        "name" : "SimpleNormalDataSet(y)", 
+        "type" : "regression(y)",
+        "shortcut_name" : "infor_for_gene_err(y)"
+    }
+  },
+  "algorConfs": {
+      "linearRegr" : {
+          "name" : "linearModel(y)",
+          "type" : "regression(y)",
+          "no_intercept" : false
+      },
+      "meanRegr" : {
+          "name"  : "simpleMeanRegression(y)", 
+          "type"  : "regression(y)", 
+          "n"     : "n(n)"
+      }
+  },
+  "cvConfs" : {
+      "bmx2cv" : {
+          "name" : "balancedmx2cv(y)", 
+           "m" : "m(n)", 
+           "n" : "n(n)"
+        },
+      "rmx2cv" :{
+          "name" : "randommxkcv(y)", 
+          "m"    : "m(n)", 
+          "n"    : "n(n)",
+          "v"    : 2      
+      }
+    },
+  "varsimConfs" : {
+      "var_sim" : {
+          "data_rep_count" : 1000, 
+          "split_rep_count" : 1, 
+          "var_for_index" : "0(n)",
+          "seq_mode"  : true,
+          "cov_print" : false
+       }
+  },
+  "veConfs" : {
+        "bmx2_var3": {
+                "name" : "var_est3_mx2cv(y)",                
+                "m" : "m(n)",
+                "minu_one" : true
+            },
+        "bmx2_var4": {
+                "name" : "var_est_general_mx2cv(y)",                
+                "m" : "m(n)",
+                "lambda_1" : "1/(2*m)(n)",
+                "lambda_2" : "(m+1)/(m*(m-1))(n)"
+        },
+        "dietterich_var" : {
+            "name" : "var_est_dietterich_mx2cv(y)",            
+            "m" : "m(n)"
+        }
+  },
+  "dataCTIConfs" : {},
+  "signtestConfs" : {      
+        "t_test_bmx2cv":{                            
+                            "test_type" : "t_test_bmx2cv(y)",
+                            "alpha"     : "0.05(n)", 
+                            "freedegree": "f(n)", 
+                            "true_mu"   : 0.0, 
+                            "const"     : 1, 
+                            "m"         : "m(n)", 
+                            "rpt"       : 1000
+                         },      
+        "t_dietterich": {
+                    "test_type" : "Dietterich_t_test(y)",
+                    "alpha" : 0.05, 
+                    "freedegree" : "m(n)", 
+                    "true_mu" : 0.0, 
+                    "const" : 1, 
+                    "m" : "m(n)", 
+                    "rpt" : 1000,      
+                    "numeratorIndex" : 1
+            },
+        "f_alpaydin" : {
+                    "test_type" : "Alpaydin_f_test(y)",
+                    "alpha" : 0.05, 
+                    "freedegree" : "2*m(n)",
+                    "freedegree2" : "m(n)",
+                    "true_mu" : 0.0, 
+                    "const" : 1, 
+                    "rpt" : 1000,
+                    "m" : 5                    
+       }
+  }, 
+  "exprs" : {
+      "flow_var_sim1" : {          
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "simple_norm",
+            "cvConf"    : "rmx2cv",
+            "algorConf" : "linearRegr",
+            "conf_TASK_VAR_SIM" : "var_sim"
+      },
+      "flow_var_sim2" : {            
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "simple_norm",
+            "cvConf"    : "rmx2cv",
+            "algorConf" : "meanRegr",
+            "conf_TASK_VAR_SIM" : "var_sim"
+        },
+      "flow_sign_test_mx2_var3" :   {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1", 
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"    : "bmx2_var3",
+          "test"      : "t_test_bmx2cv"
+      },      
+      "flow_sign_test_mx2_var4" :   {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1", 
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"    : "bmx2_var4",
+          "test"      : "t_test_bmx2cv"
+      },
+      "flow_sign_test_dietterich" : {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1",
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"   : "dietterich_var",
+          "test"      : "t_dietterich"
+      },
+      "flow_sign_test_alpaydin" : {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1",
+          "var_sim2"  : "flow_var_sim2",
+          "veConf"   : "dietterich_var",
+          "test"      : "f_alpaydin"
+      },
+      "flow_var_sim1_b" : {          
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "simple_norm",
+            "cvConf"    : "bmx2cv",
+            "algorConf" : "meanRegr",
+            "conf_TASK_VAR_SIM" : "var_sim"
+      },
+      "flow_var_sim2_b" : {            
+            "task_name" : "TASK_VAR_SIM",
+            "dataConf"  : "simple_norm",
+            "cvConf"    : "bmx2cv",
+            "algorConf" : "linearRegr",
+            "conf_TASK_VAR_SIM" : "var_sim"
+        },
+      "flow_sign_test_mx2_var3_b" :   {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1_b", 
+          "var_sim2"  : "flow_var_sim2_b",
+          "veConf"    : "bmx2_var3",
+          "test"      : "t_test_bmx2cv"
+      },      
+      "flow_sign_test_mx2_var4_b" :   {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1_b", 
+          "var_sim2"  : "flow_var_sim2_b",
+          "veConf"    : "bmx2_var4",
+          "test"      : "t_test_bmx2cv"
+      },
+      "flow_sign_test_dietterich_b" : {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1_b",
+          "var_sim2"  : "flow_var_sim2_b",
+          "veConf"   : "dietterich_var",
+          "test"      : "t_dietterich"
+      },
+      "flow_sign_test_alpaydin_b" : {
+          "task_name" : "TASK_SIGN_TEST",
+          "var_sim1"  : "flow_var_sim1_b",
+          "var_sim2"  : "flow_var_sim2_b",
+          "veConf"   : "dietterich_var",
+          "test"      : "f_alpaydin"
+      }
+  },
+"report" : {
+      "title" : "模拟回归数据中几种不同类型的显著性检验的比较",
+      "author" : "王瑞波",
+      "section1" : "本实验报告在模拟回归数据上比较了Alpayding[1999]的F检验、Dietterch[1998]的t检验和均衡$m\\times 2$上的t检验这几种显著性检验方法。",
+      "section2" : "",
+      "section3" : "",
+      "section4" : "",
+      "section5" : "",
+      "section6" : "",
+      "section7" : "",
+      "section8" : "",
+      "section9" : "",
+      "section10" : [
+            {
+              "type" : "description",
+              "comment" : "This a small praghraph description."
+            },
+            {
+              "type" : "table" ,
+              "title" : "This is the title of table",
+              "ref_label" : "ref of table",
+              "header" : [
+                "header_name1",
+                "header_name2",
+                "...",
+                "header_nameN"
+              ],
+              "data" : [
+                {
+                  "header_name1": "",
+                  "header_name2": {
+                      "expr_ref" : "", 
+                      "out_ref": ""},
+                  "...": "",
+                  "header_nameN": ""
+                },
+                {
+                  "header_name1": "",
+                  "header_name2": {"expr_ref" : "", "out_ref": ""},
+                  "...": "",
+                  "header_nameN": ""
+                }
+              ]
+            },
+            {
+              "type" : "figure",
+              "title" : "this is title of the figure",
+              "ref_label" : "ref of this figure",
+              "data" : [
+                  {
+                    "x" : [],
+                    "y" : []
+                  },
+                  {
+                    "x" : [],
+                    "y" : []
+                  }
+              ],
+              "legend" : [
+                  "",
+                  "",
+                  ""
+              ]
+            }
+      ],
+      "section11" : "Conclusions to make. Optional",
+      "section12" : "P.S."
+  }
+} 
