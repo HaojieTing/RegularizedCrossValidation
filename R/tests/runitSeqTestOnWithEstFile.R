@@ -1,18 +1,15 @@
 source("./tests/testsCollectDatasets.R", encoding="UTF-8")
 
-testMx2BCVSeqTest_dietterich <- function(upper_m, delta0, delta1, agr.cnt=1, relative=F, file.name=NULL, alpha = 0.05, beta=0.05)  {
+testMx2BCVSeqTest_dietterich <- function(upper_m, delta, relative=F, file.name=NULL, alpha = 0.05)  {
   source("./tasks/diet_mx2cv_seq_significant_test.R", encoding="UTF-8")
   results <- c()
   conf_task_dietterich <- list(
     alpha = alpha,
-    beta  = beta,
-    agree_cnt = agr.cnt,
     relative = relative,
     var.est.conf = list(
       name = "var_est_dietterich_mx2cv"
     ),
-    delta_0 = delta0,
-    delta_1 = delta1,
+    delta = delta,
     upper_m = upper_m,
     file_name = file.name,
     lower_m = 3
@@ -21,38 +18,34 @@ testMx2BCVSeqTest_dietterich <- function(upper_m, delta0, delta1, agr.cnt=1, rel
   row.names(mu.matrix) <- NULL
   colnames(mu.matrix) <- NULL
   sim_count <- nrow(mu.matrix)
+  sim_count <- 50
   for(i in 1:sim_count) {
     muv <- mu.matrix[i,]
     if (i%%100 == 0) cat(i,"...")
     conf_task_dietterich$pre_vec <- as.numeric(muv)
     task_config <- diet_mx2cv_seq_significant_test.task_config_validation(conf_task_dietterich)
     result      <- diet_mx2cv_seq_significant_test.perform_task(task_config)
-    results     <- rbind(results, c(result$test.result[1,1],result$test.result[1,2],result$test.result[1,5],result$test.result[1,6]))
+    results     <- rbind(results, c(result$test.result[1,1],result$test.result[1,2]))
   }
-  m.stop  <- upper_m + agr.cnt-1
+  m.stop  <- upper_m
   result.table <- c()
   result.h0 <- table(factor(results[which(results[,2]==0),1], levels = conf_task_dietterich$lower_m:m.stop))
   result.table <- rbind(result.table, result.h0)
   result.h1 <- table(factor(results[which(results[,2]==1),1], levels = conf_task_dietterich$lower_m:m.stop))
   result.table <- rbind(result.table, result.h1)
-  result.no <- table(factor(results[which(results[,2]==2),1], levels = conf_task_dietterich$lower_m:m.stop))
-  result.table <- rbind(result.table, result.no)
   props <- t(t(rowSums(result.table)/sim_count))
   colnames(props) <- c("prop")
   result.table <- cbind(result.table, props)
-  row.names(result.table) <- c("accept H0:", "accept H1:", "other:")
+  row.names(result.table) <- c("No Reject:", "Reject:")
   # 求取错误率
-  m.fixed <- computeExpectStopTime(c(result.h0), c(result.h1), c(result.no), sim_count)
+  m.fixed <- computeExpectStopTime(c(result.h0), c(result.h1), repi =  sim_count)
   conf_task_dietterich <- list(
     alpha = alpha,
-    beta  = beta,
-    agree_cnt = agr.cnt,
     relative = relative,
     var.est.conf = list(
       name = "var_est_dietterich_mx2cv"
     ),
-    delta_0 = delta0,
-    delta_1 = delta1,
+    delta = delta,
     upper_m = upper_m,
     file_name = file.name,
     fixed_m = m.fixed,
@@ -65,20 +58,16 @@ testMx2BCVSeqTest_dietterich <- function(upper_m, delta0, delta1, agr.cnt=1, rel
     conf_task_dietterich$pre_vec <- as.numeric(muv)
     task_config <- diet_mx2cv_seq_significant_test.task_config_validation(conf_task_dietterich)
     result      <- diet_mx2cv_seq_significant_test.perform_task(task_config)
-    results     <- rbind(results, c(result$test.result[1,1],result$test.result[1,2],result$test.result[1,5],result$test.result[1,6]))
+    results     <- rbind(results, c(result$test.result[1,1],result$test.result[1,2]))
   }
-  m.stop  <- upper_m + agr.cnt-1
+  m.stop  <- upper_m
   result.table.mfix <- c()
   result.h0.mfix <- table(factor(results[which(results[,2]==0),1], levels = conf_task_dietterich$lower_m:m.stop))
   result.table.mfix <- rbind(result.table.mfix, result.h0.mfix)
   result.h1.mfix <- table(factor(results[which(results[,2]==1),1], levels = conf_task_dietterich$lower_m:m.stop))
   result.table.mfix <- rbind(result.table.mfix, result.h1.mfix)
-  result.no.mfix <- table(factor(results[which(results[,2]==2),1], levels = conf_task_dietterich$lower_m:m.stop))
-  result.table.mfix <- rbind(result.table.mfix, result.no.mfix)
   props.mfix <- t(t(rowSums(result.table.mfix)/sim_count))
-  type1error <- mean(results[,3])
-  type2error <- mean(results[,4])
-  format.result <- c(result.h0, result.h1, result.no, m.fixed, c(props),c(props.mfix), type1error, type2error)
+  format.result <- c(result.h0, result.h1, m.fixed, c(props),c(props.mfix))
   colnames(format.result) <- NULL
   names(format.result) <- NULL
   return(format.result)

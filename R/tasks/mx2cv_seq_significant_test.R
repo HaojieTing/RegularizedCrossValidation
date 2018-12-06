@@ -365,10 +365,8 @@ mx2cv_seq_significant_test.task_config_validation <- function(task_config) {
   if(is.null(task_config$alpha)) stop("The type I prob is not provided")  
   # 第二类错误概率
   if(is.null(task_config$beta)) stop("The type II prob is not provided")
-  # 原假设中的delta0
-  if(is.null(task_config$delta_0)) stop("The delta_0 in H0 is not provided")
-  # 备择假设中的delta1
-  if(is.null(task_config$delta_1)) stop("The delta_1 in H1 is not provided")
+  # 原假设中的delta
+  if(is.null(task_config$delta)) stop("The delta in H0 is not provided")
   # m参数停止的上界
   if(is.null(task_config$upper_m))  stop("The upper_m in H1 is not provided")
   # 判决算法的相对误差
@@ -454,8 +452,7 @@ mx2cv_seq_significant_test.perform_task <- function(task_config) {
   alpha <- task_config$alpha  # 第一类错误概率
   beta  <- task_config$beta   # 第二类错误概率
   veConf <- task_config$var.est.conf  # 方差估计配置
-  delta_0 <- task_config$delta_0  # 原假设中的delta0
-  delta_1 <- task_config$delta_1  # 备择假设中的delta1
+  delta <- task_config$delta  # 原假设中的delta0
   upper_m <- task_config$upper_m  # m参数停止的上界
   fixed_m <- task_config$fixed_m
   relative <- task_config$relative # 相对误差
@@ -465,12 +462,12 @@ mx2cv_seq_significant_test.perform_task <- function(task_config) {
   }
   
   cur_m <- lower_m  # 存储当前的m值  
-  test_result <- 2
+  test_result <- 0
   muv1 <- c()  # 存储第一个机器学习算法的性能
   muv2 <- c()  # 存储第二个机器学习算法的性能
   name.vec <- c("m", "delta_0", "delta_1", "var_est", "I_l", "I_r", "mu_algor1","mu_algor2","mu_diff", "prob_rej_H0", "prob_rej_H1")
   verbose.table <- c()
-  pre_decision <- 2
+  pre_decision <- 0
   tmp_agree_idx = 0
   sim_int_result <- c()
   esti_funcs <- mx2cv_seq_significant_test.est_types[[task_config$est_type]]
@@ -518,44 +515,17 @@ mx2cv_seq_significant_test.perform_task <- function(task_config) {
     ve.estimator <- loadVarEstForOneExprInfo(veConf$name)
     veConf$m <- cur_m
     var_est <- ve.estimator(c(mu_diff_vec, mu_diff), veConf)
-    # 计算左右边界
-    I_l = delta_0 - c_m_est * sqrt(var_est) * qt(p = 1-alpha, f_m_est)
-    I_r = delta_1 + c_m_est * sqrt(var_est) * qt(p = 1-beta, f_m_est)
-    
-    if(I_r < I_l) {
-      warning("The estimation of confidence interval is invalid")
-    }
+    # 计算右边界
+    I_l = delta -  sqrt(var_est) * qt(p = 1-alpha, f_m_est)
+    I_r = delta + c_m_est * sqrt(var_est) * qt(p = 1-alpha, f_m_est)
     if(task_config$sim_int) {
       sim_int_result <- rbind(sim_int_result, t(c(I_l, I_r)))
       next()
     }
-    prob_rej_H0 <- pt((mu_diff - delta_0)/(sqrt(var_est)*c_m_est), df = f_m_est, lower.tail = F)
-    prob_rej_H1 <- pt((mu_diff - delta_1)/(sqrt(var_est)*c_m_est), df = f_m_est, lower.tail = T)
-    type1error <- 0
-    type2error <- 0
-    if (mu_diff > delta_0 + c_m_est * sqrt(var_est) * qt(p = 1-alpha, f_m_est))
-      type1error <- 1
-    if(mu_diff < delta_1 - c_m_est * sqrt(var_est) * qt(p = 1-beta, f_m_est))
-      type2error <-1
-    verbose.table <- rbind(verbose.table, c(cur_m, delta_0, delta_1, var_est, I_l, I_r, mean(muv1), mean(muv2), mu_diff, prob_rej_H0, prob_rej_H1))
     if(mu_diff > I_r) { # 接受H1
-      if(pre_decision == 1) {
-        tmp_agree_idx = tmp_agree_idx + 1
-      } else {
-        tmp_agree_idx <- 1
-      }
       pre_decision <- 1
-    } else if(mu_diff < I_l) { # 接受H0
-      if(pre_decision == 0) {
-        tmp_agree_idx = tmp_agree_idx + 1
-      } else {
-        tmp_agree_idx <- 1
-      }
-      pre_decision <- 0
-    } else { # 无法判断，进入下一个循环
-      test_result <- 2
-      tmp_agree_idx <- 0
     }
+    verbose.table <- rbind(verbose.table, c(cur_m, delta, var_est, I_r, mean(muv1), mean(muv2), mu_diff, pre_decision))
     if(!is.null(fixed_m) && cur_m == fixed_m) {
       test_result <- pre_decision
       break()
@@ -569,9 +539,8 @@ mx2cv_seq_significant_test.perform_task <- function(task_config) {
     row.names(sim_int_result) <- lower_m:upper_m
     return(sim_int_result)
   }
-  colnames(verbose.table) <- name.vec
-  test_result <- t(c(cur_m, test_result, prob_rej_H0, prob_rej_H1, type1error, type2error))
-  colnames(test_result) <- c("m.stop", "test.result","prob.rej.H0","prob.rej.H1", "type1error", "type2error")
+  test_result <- t(c(cur_m, test_result))
+  colnames(test_result) <- c("m.stop", "test.result")
   result <- list( "verbose" = verbose.table, "test.result" = test_result, "mu.vec"= mu_diff_vec)
   return(result)
 }

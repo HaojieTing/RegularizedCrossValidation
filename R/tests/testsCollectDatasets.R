@@ -856,9 +856,10 @@ formatMatrix <- function (vec) {
   return(expect.matrix)
 }
 
-computeExpectStopTime <- function(m.h0, m.h1, m.no, repi = 1000) {
-  m.no[length(m.no)] <- (repi - (sum(m.h0)+sum(m.h1)))
-  m.dec <- m.h0+m.h1+m.no
+computeExpectStopTime <- function(m.h0, m.h1, m.no=NULL, repi = 1000) {
+  if(!is.null(m.no)) m.no[length(m.no)] <- (repi - (sum(m.h0)+sum(m.h1)))
+  m.dec <- m.h0+m.h1
+  if(!is.null(m.no))  m.dec <- m.h0+m.h1+m.no
   freq.v <- m.dec /repi
   count.vec <- 3:(3+length(m.h0)-1)
   m.expect <- round(sum(freq.v %*% count.vec))
