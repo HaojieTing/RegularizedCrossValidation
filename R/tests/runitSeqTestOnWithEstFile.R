@@ -18,7 +18,6 @@ testMx2BCVSeqTest_dietterich <- function(upper_m, delta, relative=F, file.name=N
   row.names(mu.matrix) <- NULL
   colnames(mu.matrix) <- NULL
   sim_count <- nrow(mu.matrix)
-  sim_count <- 50
   for(i in 1:sim_count) {
     muv <- mu.matrix[i,]
     if (i%%100 == 0) cat(i,"...")
@@ -100,6 +99,7 @@ testMx2BCVSeqTest_bmx2cv <- function(upper_m, delta, relative=F, file.name=NULL,
   if(is.null(sim_count)) {
     sim_count <- nrow(mu.matrix)
   } 
+  sim_count <- 50
   for(i in 1:sim_count) {
     muv <- mu.matrix[i,]
     if (i%%100 == 0) cat(i,"...")
@@ -110,9 +110,9 @@ testMx2BCVSeqTest_bmx2cv <- function(upper_m, delta, relative=F, file.name=NULL,
   }  
   m.stop  <- upper_m
   result.table <- c()
-  result.h0 <- table(factor(results[which(results[,2]==0),1], levels = conf_task_dietterich$lower_m:m.stop))
+  result.h0 <- table(factor(results[which(results[,2]==0),1], levels = conf_TASK_BMX2SEQTEST$lower_m:m.stop))
   result.table <- rbind(result.table, result.h0)
-  result.h1 <- table(factor(results[which(results[,2]==1),1], levels = conf_task_dietterich$lower_m:m.stop))
+  result.h1 <- table(factor(results[which(results[,2]==1),1], levels = conf_TASK_BMX2SEQTEST$lower_m:m.stop))
   result.table <- rbind(result.table, result.h1)
   props <- t(t(rowSums(result.table)/sim_count))
   colnames(props) <- c("prop")
@@ -143,13 +143,13 @@ testMx2BCVSeqTest_bmx2cv <- function(upper_m, delta, relative=F, file.name=NULL,
     conf_TASK_BMX2SEQTEST$pre_vec <- as.numeric(muv)
     task_config <- mx2cv_seq_significant_test.task_config_validation(conf_TASK_BMX2SEQTEST)
     result      <- mx2cv_seq_significant_test.perform_task(task_config)
-    results     <- rbind(results, c(result$test.result[1,1],result$test.result[1,2],result$test.result[1,5],result$test.result[1,6]))
+    results     <- rbind(results, c(result$test.result[1,1],result$test.result[1,2]))
   }  
   m.stop  <- upper_m
   result.table.mfix <- c()
-  result.h0.mfix <- table(factor(results[which(results[,2]==0),1], levels = conf_task_dietterich$lower_m:m.stop))
+  result.h0.mfix <- table(factor(results[which(results[,2]==0),1], levels = conf_TASK_BMX2SEQTEST$lower_m:m.stop))
   result.table.mfix <- rbind(result.table.mfix, result.h0.mfix)
-  result.h1.mfix <- table(factor(results[which(results[,2]==1),1], levels = conf_task_dietterich$lower_m:m.stop))
+  result.h1.mfix <- table(factor(results[which(results[,2]==1),1], levels = conf_TASK_BMX2SEQTEST$lower_m:m.stop))
   result.table.mfix <- rbind(result.table.mfix, result.h1.mfix)
   props.mfix <- t(t(rowSums(result.table.mfix)/sim_count))
   format.result <- c(result.h0, result.h1, m.fixed, c(props),c(props.mfix))

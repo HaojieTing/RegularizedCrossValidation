@@ -163,6 +163,9 @@ diet_mx2cv_seq_significant_test.perform_task <- function(task_config) {
     }
     if(mu_diff > I_r) { # 接受H1
       pre_decision <- 1
+      verbose.table <- rbind(verbose.table, c(cur_m, delta, var_est, I_r, mean(muv1), mean(muv2), mu_diff, pre_decision))
+      test_result <- pre_decision
+      break()
     }
     verbose.table <- rbind(verbose.table, c(cur_m, delta, var_est, I_r, mean(muv1), mean(muv2), mu_diff, pre_decision))
     if(!is.null(fixed_m) && cur_m == fixed_m) {

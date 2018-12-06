@@ -363,8 +363,6 @@ mx2cv_seq_significant_test.task_config_validation <- function(task_config) {
   source("metrics/metric_loader.R", encoding="UTF-8")
   # 第一类错误概率
   if(is.null(task_config$alpha)) stop("The type I prob is not provided")  
-  # 第二类错误概率
-  if(is.null(task_config$beta)) stop("The type II prob is not provided")
   # 原假设中的delta
   if(is.null(task_config$delta)) stop("The delta in H0 is not provided")
   # m参数停止的上界
@@ -375,8 +373,6 @@ mx2cv_seq_significant_test.task_config_validation <- function(task_config) {
   if(is.null(task_config$lower_m))  task_config$lower_m <- 3  # m参数的起始值
   # 开启模拟置信区间的真实值任务，而不是判决.
   if (is.null(task_config$sim_int)) task_config$sim_int <- FALSE 
-  # 连续多少次判决一次，才认为停止。
-  if(is.null(task_config$agree_cnt)) task_config$agree_cnt <- 3
   # 方差估计
   if(is.null(task_config$var.est.conf)) stop("The var est conf is not provided")
   if(!is.null(task_config$pre_vec)) { # 如果预先给定了性能向量，则不需要验证数据集等信息。
@@ -448,7 +444,7 @@ mx2cv_seq_significant_test.perform_task <- function(task_config) {
       cvConf$data <- data
   }
   
-  agree_cnt <- task_config$agree_cnt
+  
   alpha <- task_config$alpha  # 第一类错误概率
   beta  <- task_config$beta   # 第二类错误概率
   veConf <- task_config$var.est.conf  # 方差估计配置
@@ -468,14 +464,13 @@ mx2cv_seq_significant_test.perform_task <- function(task_config) {
   name.vec <- c("m", "delta_0", "delta_1", "var_est", "I_l", "I_r", "mu_algor1","mu_algor2","mu_diff", "prob_rej_H0", "prob_rej_H1")
   verbose.table <- c()
   pre_decision <- 0
-  tmp_agree_idx = 0
   sim_int_result <- c()
   esti_funcs <- mx2cv_seq_significant_test.est_types[[task_config$est_type]]
   cm_func <- esti_funcs$cm
   fm_func <- esti_funcs$fm
   type1error <- 0
   type2error <- 0
-  for(cur_m in lower_m:(upper_m+agree_cnt-1)) {
+  for(cur_m in lower_m:upper_m) {
     if(!is.null(fixed_m)) {
       cur_m <- fixed_m
     }
@@ -524,13 +519,12 @@ mx2cv_seq_significant_test.perform_task <- function(task_config) {
     }
     if(mu_diff > I_r) { # 接受H1
       pre_decision <- 1
-    }
-    verbose.table <- rbind(verbose.table, c(cur_m, delta, var_est, I_r, mean(muv1), mean(muv2), mu_diff, pre_decision))
-    if(!is.null(fixed_m) && cur_m == fixed_m) {
+      verbose.table <- rbind(verbose.table, c(cur_m, delta, var_est, I_r, mean(muv1), mean(muv2), mu_diff, pre_decision))
       test_result <- pre_decision
       break()
     }
-    if(tmp_agree_idx >= agree_cnt && is.null(fixed_m)) {
+    verbose.table <- rbind(verbose.table, c(cur_m, delta, var_est, I_r, mean(muv1), mean(muv2), mu_diff, pre_decision))
+    if(!is.null(fixed_m) && cur_m == fixed_m) {
       test_result <- pre_decision
       break()
     }
