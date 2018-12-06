@@ -173,7 +173,7 @@ testWithExternFileParallel_bmx2 <- function(delta.start, delta.end, delta.step, 
     setwd(work.directory)
     delta <- delta.seq[i]
     result <- testMx2BCVSeqTest_bmx2cv(upper.m, delta,  file.name=file.name, est.type=est.type, rho1=rho1, rho2=rho2)
-    c(delta0, delta1, result)
+    c(delta, result)
   }
   write.csv(results, file = paste("est_for_test/", paste("bmx2", dataset.tag, est.type, format(Sys.time(), "%Y%m%d%H%M%S"),sep="_"), sep=""))
 }
@@ -193,7 +193,7 @@ testWithExternFileParallel_diet <- function(delta.start, delta.end, delta.step, 
     setwd(work.directory)
     delta <- delta.seq[i]
     result <- testMx2BCVSeqTest_dietterich(upper.m, delta, file.name=file.name) 
-    c(delta0, delta1, result)
+    c(delta, result)
   }
   write.csv(results, file = paste("est_for_test/", paste("diet", dataset.tag, format(Sys.time(), "%Y%m%d%H%M%S"),sep="_"), sep=""))
 }
