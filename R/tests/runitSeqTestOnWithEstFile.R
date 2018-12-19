@@ -99,7 +99,6 @@ testMx2BCVSeqTest_bmx2cv <- function(upper_m, delta, relative=F, file.name=NULL,
   if(is.null(sim_count)) {
     sim_count <- nrow(mu.matrix)
   } 
-  sim_count <- 50
   for(i in 1:sim_count) {
     muv <- mu.matrix[i,]
     if (i%%100 == 0) cat(i,"...")
@@ -158,7 +157,7 @@ testMx2BCVSeqTest_bmx2cv <- function(upper_m, delta, relative=F, file.name=NULL,
   return(format.result)
 }
 
-testWithExternFileParallel_bmx2 <- function(delta.start, delta.end, delta.step, true.value, file.name, upper.m, est.type, dataset.tag, rho1=NULL, rho2=NULL) {
+testWithExternFileParallel_bmx2 <- function(delta.start, delta.end, delta.step, true.value, file.name, upper.m, est.type, dataset.tag, rho1=NULL, rho2=NULL, alpha.value=0.05) {
   library(foreach)
   library(doParallel)
   source("./tests/testsCollectDatasets.R", encoding="UTF-8")
@@ -172,13 +171,13 @@ testWithExternFileParallel_bmx2 <- function(delta.start, delta.end, delta.step, 
   results <- foreach(i=1:sim.count, .combine = rbind, .export = ls(.GlobalEnv)) %dopar% {
     setwd(work.directory)
     delta <- delta.seq[i]
-    result <- testMx2BCVSeqTest_bmx2cv(upper.m, delta,  file.name=file.name, est.type=est.type, rho1=rho1, rho2=rho2)
+    result <- testMx2BCVSeqTest_bmx2cv(upper.m, delta,  file.name=file.name, est.type=est.type, rho1=rho1, rho2=rho2, alpha = alpha.value)
     c(delta, result)
   }
   write.csv(results, file = paste("est_for_test/", paste("bmx2", dataset.tag, est.type, format(Sys.time(), "%Y%m%d%H%M%S"),sep="_"), sep=""))
 }
 
-testWithExternFileParallel_diet <- function(delta.start, delta.end, delta.step, true.value, file.name, upper.m, dataset.tag) {
+testWithExternFileParallel_diet <- function(delta.start, delta.end, delta.step, true.value, file.name, upper.m, dataset.tag, alpha.value=0.05) {
   library(foreach)
   library(doParallel)
   source("./tests/testsCollectDatasets.R", encoding="UTF-8")
@@ -192,7 +191,7 @@ testWithExternFileParallel_diet <- function(delta.start, delta.end, delta.step, 
   results <- foreach(i=1:sim.count, .combine = rbind, .export = ls(.GlobalEnv)) %dopar% {
     setwd(work.directory)
     delta <- delta.seq[i]
-    result <- testMx2BCVSeqTest_dietterich(upper.m, delta, file.name=file.name) 
+    result <- testMx2BCVSeqTest_dietterich(upper.m, delta, file.name=file.name, alpha = alpha.value) 
     c(delta, result)
   }
   write.csv(results, file = paste("est_for_test/", paste("diet", dataset.tag, format(Sys.time(), "%Y%m%d%H%M%S"),sep="_"), sep=""))
