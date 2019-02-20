@@ -33,8 +33,8 @@ measure.F1.credible.interval <- function(confusion.matrix, lambda =1, alpha = 0.
   fp <- confusion.matrix[2]
   fn <- confusion.matrix[3]
   tn <- confusion.matrix[4]
-  betapr.ci.lower <- qbetapr(alpha/2, tp+lambda, fn+lambda)
-  betapr.ci.upper <- qbetapr(alpha/2, tp+lambda, fn+lambda, lower.tail = F)
+  betapr.ci.lower <- qbetapr(alpha/2, fn+fp+2*lambda, tp+lambda)
+  betapr.ci.upper <- qbetapr(alpha/2, fn+fp+2*lambda, tp+lambda, lower.tail = F)
   f1.ci.lower <- 1.0/(1.0+0.5*betapr.ci.upper)
   f1.ci.upper <- 1.0/(1.0+0.5*betapr.ci.lower)
   return(c(f1.ci.lower, f1.ci.upper))
@@ -71,6 +71,7 @@ TrainAndTestForPRF <- function(train.dataset, test.dataset, algorithm.entry,
 
 
 setwd(file.path(getwd(),"R"))
+source("./utils.R", encoding="UTF-8")
 source("./datasets/classification/two_normals_classification.R", encoding = "UTF-8")
 source("./mlAlgorithms/algor_loader.R", encoding="UTF-8")
 source("./crossvalidations/cv_loader.R", encoding="UTF-8")
@@ -86,16 +87,21 @@ index.F1.now = 0
 len.P.now = 0.0
 len.R.now = 0.0
 len.F1.now = 0.0
-sim.count = 100
+train.data.size = 100
+sim.count = 1000
+test.data.size = 5* train.data.size 
 for(repi in 1:sim.count) {
+  if (repi %% 10 == 0) print(repi)
   train.dataset.conf <-list(n0 = 100, n1=100, mu0 = rep(0,2), mu1 = rep(0.5,2), sigma0 = diag(2), sigma1 = diag(2))
   train.dataset <- two_normals_classification.DataGenerator(train.dataset.conf)
-  test.dataset.conf <-list(n0 = 500, n1=500, mu0 = rep(0,2), mu1 = rep(0.5,2), sigma0 = diag(2), sigma1 = diag(2))
+  test.dataset.conf <-list(n0 = 2000, n1=2000, mu0 = rep(0,2), mu1 = rep(0.5,2), sigma0 = diag(2), sigma1 = diag(2))
   test.dataset <- two_normals_classification.DataGenerator(test.dataset.conf)
-  logistic.regression.conf <- list(name="logisticGLM", type = "classification")
-  algorithm.info <- LoadAlgorithmGenerator(logistic.regression.conf)
+  algorithm.conf <- list(name="classificationTree", type = "classification", method="class")
+  algorithm.info <- LoadAlgorithmGenerator(algorithm.conf)
   algorithm.generator <- algorithm.info[[1]]
-  true.values <- TrainAndTestForPRF(train.dataset, test.dataset, algorithm.generator, logistic.regression.conf)
+  algorithm.packages <- algorithm.info[[2]]
+  WorkerInit(algorithm.packages)
+  true.values <- TrainAndTestForPRF(train.dataset, test.dataset, algorithm.generator, algorithm.conf)
   true.value.P <- true.values$p
   true.value.R <- true.values$r
   true.value.F1 <- true.values$f
@@ -113,7 +119,7 @@ for(repi in 1:sim.count) {
     validation.indices <- partition[[2]]
     cv.train.dataset <- train.dataset[train.indices,]
     cv.validation.dataset <- train.dataset[validation.indices,]
-    result <- TrainAndTestForPRF(cv.train.dataset, cv.validation.dataset, algorithm.generator, logistic.regression.conf)
+    result <- TrainAndTestForPRF(cv.train.dataset, cv.validation.dataset, algorithm.generator, algorithm.conf)
     confusion.matrices[index, ] <- c(result$tp, result$fp, result$fn, result$tn)
   }
   # 15年王钰师兄的计算方法：平均所有的混淆矩阵。
@@ -138,7 +144,7 @@ for(repi in 1:sim.count) {
   len.R.15 = len.R.15 + ci.len.R.15
   len.F1.15 = len.F1.15 + ci.len.F1.15
   # 现在的计算方法
-  confusion.matrix.now <- colSums(confusion.matrices) * 0.36
+  confusion.matrix.now <- colSums(confusion.matrices) * 0.1844
   ci.P.now <- measure.P.credible.interval(confusion.matrix.now)
   ci.R.now <- measure.R.credible.interval(confusion.matrix.now)
   ci.F1.now <- measure.F1.credible.interval(confusion.matrix.now)
@@ -170,5 +176,6 @@ len.F1.15 = len.F1.15/sim.count
 len.P.now = len.P.now/sim.count
 len.R.now = len.R.now/sim.count
 len.F1.now = len.F1.now/sim.count
+print(c(true.value.P, true.value.R, true.value.F1))
 print(c(index.P.15, index.R.15, index.F1.15, len.P.15, len.R.15, len.F1.15))
 print(c(index.P.now, index.R.now, index.F1.now, len.P.now, len.R.now, len.F1.now))
