@@ -92,11 +92,11 @@ sim.count = 1000
 test.data.size = 5* train.data.size 
 for(repi in 1:sim.count) {
   if (repi %% 10 == 0) print(repi)
-  train.dataset.conf <-list(n0 = 100, n1=100, mu0 = rep(0,2), mu1 = rep(0.5,2), sigma0 = diag(2), sigma1 = diag(2))
+  train.dataset.conf <-list(n0 = 300, n1=300, mu0 = rep(0,2), mu1 = rep(0.5,2), sigma0 = diag(2), sigma1 = diag(2))
   train.dataset <- two_normals_classification.DataGenerator(train.dataset.conf)
-  test.dataset.conf <-list(n0 = 2000, n1=2000, mu0 = rep(0,2), mu1 = rep(0.5,2), sigma0 = diag(2), sigma1 = diag(2))
+  test.dataset.conf <-list(n0 = 1500, n1=1500, mu0 = rep(0,2), mu1 = rep(0.5,2), sigma0 = diag(2), sigma1 = diag(2))
   test.dataset <- two_normals_classification.DataGenerator(test.dataset.conf)
-  algorithm.conf <- list(name="classificationTree", type = "classification", method="class")
+  algorithm.conf <- list(name="logisticGLM", type = "classification", method="class")
   algorithm.info <- LoadAlgorithmGenerator(algorithm.conf)
   algorithm.generator <- algorithm.info[[1]]
   algorithm.packages <- algorithm.info[[2]]
@@ -144,7 +144,7 @@ for(repi in 1:sim.count) {
   len.R.15 = len.R.15 + ci.len.R.15
   len.F1.15 = len.F1.15 + ci.len.F1.15
   # 现在的计算方法
-  confusion.matrix.now <- colSums(confusion.matrices) * 0.1844
+  confusion.matrix.now <- colSums(confusion.matrices) * 0.3688
   ci.P.now <- measure.P.credible.interval(confusion.matrix.now)
   ci.R.now <- measure.R.credible.interval(confusion.matrix.now)
   ci.F1.now <- measure.F1.credible.interval(confusion.matrix.now)
