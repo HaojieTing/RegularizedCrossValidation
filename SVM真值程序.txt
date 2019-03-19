@@ -1,0 +1,91 @@
+####模拟F值的真值
+#实验说明：产生训练样本n个，然后用分类算法CART进行训练，然后用固定的testnum万个测试样本来预测，得到
+#F值，循环实验M万次，平均M万个F值作为样本量为6000 分类算法为CART 时F的真值
+
+print(date())
+#setwd("D:\\R实验\\两高斯F值相关系数\\基于F值的置信区间（样本分位数）")
+#setwd("Z:\\lyf\\两高斯F值相关系数")
+library(MASS)
+library(rpart)
+library(e1071)
+library(supclust)
+#library(PearsonDS)
+
+#参数的初始化
+d<-5  #样本空间维数
+n<-200   #样本量
+M<-50000 #重复次数
+
+mean1<-rep(0,d)
+cov1<-diag(d)
+mean2<-rep(1,d)
+cov2<-2*cov1
+
+##计算过程中要用的参数
+P1<-rep(NA,M)    #M次重复实验得到的F值
+P2<-R2<-R1<-P1
+
+
+#数据产生
+#随机抽取h个样本
+GSample<-function(h){
+  hh<-trunc(h/2)
+  o<-sample(h,hh)
+  x<-matrix(NA,h,d)
+  y<-rep(NA,h)
+  x[o,]<-mvrnorm(hh,mean1,cov1)
+  x[-o,]<-mvrnorm(h-hh,mean2,cov2)
+  y[o]<-0
+  y[-o]<-1
+  return(list(x,y))
+}
+
+#——————————————————————————————————（1）产生测试数据————————————————————————
+testnum<-10000###测试样本1万个
+DataTest<-GSample(testnum)
+XTest<-DataTest[[1]]##测试样本x值
+YTest<-DataTest[[2]]##测试样本y值
+XTest<-data.frame(XTest)
+YTest<-factor(YTest)
+dTest<-cbind(XTest,YTest)
+YTest<-as.numeric(as.vector(YTest))
+
+#—————————————————————————————————（2）训练和测试 ————————————————————————————————
+for(i in 1:M)
+{
+  if(i%%1000==0)
+    print(paste("第",as.character(i),"次实验"))
+  
+  ##产生训练样本n个
+  DataTrain<-GSample(n)
+  x<-DataTrain[[1]]
+  y<-DataTrain[[2]]
+  y<-factor(y)
+  x<-data.frame(x)
+  dTrain<-cbind(x,y)
+  
+  y<-as.numeric(as.vector(y))
+  fittr<-svm(y~.,data=dTrain,kernel="sigmoid")##训练样本训练
+  preTest<-as.numeric(as.vector(predict(fittr,dTest,type="class")))##测试样本测试
+  
+  ConfuMat<-table(YTest,preTest)##测试得到的混淆矩阵
+  P1[i]<- ConfuMat[1,1]/(ConfuMat[1,1]+ ConfuMat[2,1])
+  R1[i]<- ConfuMat[1,1]/(ConfuMat[1,1]+ ConfuMat[1,2])
+  
+  
+  P2[i]<- ConfuMat[2,2]/(ConfuMat[2,2]+ ConfuMat[1,2])
+  R2[i]<- ConfuMat[2,2]/(ConfuMat[2,2]+ ConfuMat[2,1])
+ 
+  
+}
+P1m<-mean(P1)
+P2m<-mean(P2)
+R1m<-mean(R1)
+R2m<-mean(R2)
+
+FE<-cbind(P1m,P2m,R1m,R2m)
+filename2=paste("SVM 分类 PR值sample ", as.character(n),"个 维数d=",
+                as.character(d),"mean1=",as.character(mean1[1]),"sigma1=",as.character(cov1[1]),
+                "mean2=",as.character(mean2[1]),"sigma2=",as.character(cov2[1]),".csv")
+write.csv(FE,filename2)
+P1m
