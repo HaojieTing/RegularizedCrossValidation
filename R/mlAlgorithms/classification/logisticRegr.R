@@ -1,4 +1,4 @@
-logisticglm.fit <- function(data_train, algorConf){
+logisticRegr.fit <- function(data_train, algorConf){
   if(nlevels(factor(data_train[, ncol(data_train)])) != 2) 
     stop("")
   fit <- glm(as.formula(paste(colnames(data_train)[ncol(data_train)], '~.', sep="")), data=data_train, family="binomial")
@@ -6,7 +6,7 @@ logisticglm.fit <- function(data_train, algorConf){
 }
 
 
-logisticglm.predict <- function(fit, data_test, algorConf){ 
+logisticRegr.predict <- function(fit, data_test, algorConf){ 
   coef <- as.vector(fit$coef)
   x <- data_test[, 1:(ncol(data_test)-1)]
   x <- cbind(1, x)
@@ -16,17 +16,17 @@ logisticglm.predict <- function(fit, data_test, algorConf){
 }
 
 
-logisticGLM.TrainAndTest <- function(data_train, data_test, algorConf) {
-  model <- logisticglm.fit(data_train, algorConf)
-  return(logisticglm.predict(model, data_test, algorConf))
+logisticRegr.TrainAndTest <- function(data_train, data_test, algorConf) {
+  model <- logisticRegr.fit(data_train, algorConf)
+  return(logisticRegr.predict(model, data_test, algorConf))
 }
 
 
 #给出分类器所需要载入的包
-logisticGLM.Prepackages <- c()
+logisticRegr.Prepackages <- c()
 
 
-logisticGLM.validation <- function(algorConf) {
+logisticRegr.validation <- function(algorConf) {
   # 验证配置是否正确;
   #
   # Args:
@@ -38,4 +38,4 @@ logisticGLM.validation <- function(algorConf) {
 }
 
 
-comment(logisticGLM.TrainAndTest) <- c("广义线性模型中的两类logistic分类算法")
+comment(logisticRegr.TrainAndTest) <- c("广义线性模型中的两类logistic分类算法")
