@@ -5,19 +5,21 @@ testCovarianceSimulation <- function() {
   config <- list(
     rpt = 1000,
     seq = FALSE,
+    overlap_count = round(150/6),
     dataset.conf = list(
-      
+      name = "simWYneco2014Expr2",
+      n = 150
     ),
     algorithm1.conf = list(
-      
-    ),
-    algorithm2.conf = list(
-      
+      name = "logisticRegr"
     ),
     crossvalidation.conf = list(
-      name = "hold_out"
+      name = "hold_out",
+      prop = 0.5
     )
+    
   )
   covariance_simulation.task_config_validation(config)
-  covariance_simulation.perform_task(config)
+  result <- covariance_simulation.perform_task(config)
+  print(result)
 }
