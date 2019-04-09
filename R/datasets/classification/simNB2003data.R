@@ -6,7 +6,7 @@
 # E-mail: wangruibo@sxu.edu.cn
 # Date: 2017/5/30
 
-two_normals_classification.DataGenerator <- function(dataConf){
+simNB2003data.DataGenerator <- function(dataConf){
   require(MASS)
   n0 <- dataConf$n0
   n1 <- dataConf$n1
@@ -27,10 +27,10 @@ two_normals_classification.DataGenerator <- function(dataConf){
 }
 
 
-two_normals_classification.Prepackages <- c("MASS")
+simNB2003data.Prepackages <- c("MASS")
 
 
-two_normals_classification.validate.n <- function(name, value) {
+simNB2003data.validate.n <- function(name, value) {
   if(!is.double(value) || length(value) > 1)  {
     warning(paste("param", name, "is not a integer"))
     return(FALSE)
@@ -46,7 +46,7 @@ two_normals_classification.validate.n <- function(name, value) {
   return(TRUE)
 }
 
-two_normals_classification.validate.mu <- function( name, value) {
+simNB2003data.validate.mu <- function( name, value) {
   if( !is.vector(value) ) {
      return(FALSE)
   }
@@ -56,7 +56,7 @@ two_normals_classification.validate.mu <- function( name, value) {
   return(TRUE)
 }
 
-two_normals_classification.validate.cov <- function(name, value) {
+simNB2003data.validate.cov <- function(name, value) {
   
   if( !is.matrix(value) ) {
     return(FALSE)
@@ -74,16 +74,16 @@ two_normals_classification.validate.cov <- function(name, value) {
   return(TRUE)
 }
 
-two_normals_classification.conf.list <- list(
-  list(name="n0", tip= "count of y=0", type="", valid_fun = two_normals_classification.validate.n),
-  list(name="n1", tip = "count of y=1", type="", valid_fun = two_normals_classification.validate.n),
-  list(name="mu0", tip = "mean of first class", type = "", valid_fun = two_normals_classification.validate.mu),
-  list(name="mu1", tip = "mean of class 1", type = "", valid_fun = two_normals_classification.validate.mu),
-  list(name="sigma0", tip = "cov of class 0", type = "", valid_fun = two_normals_classification.validate.cov),
-  list(name="sigma1", tip = "cov of class 1", type = "", valid_fun = two_normals_classification.validate.cov)
+simNB2003data.conf.list <- list(
+  list(name="n0", tip= "count of y=0", type="", valid_fun = simNB2003data.validate.n),
+  list(name="n1", tip = "count of y=1", type="", valid_fun = simNB2003data.validate.n),
+  list(name="mu0", tip = "mean of first class", type = "", valid_fun = simNB2003data.validate.mu),
+  list(name="mu1", tip = "mean of class 1", type = "", valid_fun = simNB2003data.validate.mu),
+  list(name="sigma0", tip = "cov of class 0", type = "", valid_fun = simNB2003data.validate.cov),
+  list(name="sigma1", tip = "cov of class 1", type = "", valid_fun = simNB2003data.validate.cov)
   )
 
-two_normals_classification.conf.shortcuts <- list(
+simNB2003data.conf.shortcuts <- list(
 	bengio_infer_ml_sim1 = list(n0 = 100, n1=100, mu0 = rep(0,2), mu1 = rep(1,2), sigma0 = diag(2), sigma1 = (1/2)*diag(2)),
     bengio_infer_ml_sim2 = list(n0 = 100, n1=100, mu0 = rep(0,2), mu1 = rep(1,2), sigma0 = diag(2), sigma1 = (1/6)*diag(2)),
 	bengio_infer_ml_sim3 = list(n0 = 1000, n1=1000, mu0 = rep(0,2), mu1 = rep(1,2), sigma0 = diag(2), sigma1 = (1/2)*diag(2)),
@@ -91,9 +91,9 @@ two_normals_classification.conf.shortcuts <- list(
 )
 
 
-two_normals_classification.validation <- function(dataConf) {
+simNB2003data.validation <- function(dataConf) {
   valid <- ValidateConfiguration( conf_impl = dataConf, 
-                              conf_def = two_normals_classification.conf.list, 
-                              shortcut_list =  two_normals_classification.conf.shortcuts  )
+                              conf_def = simNB2003data.conf.list, 
+                              shortcut_list =  simNB2003data.conf.shortcuts  )
   return(valid)
 }
