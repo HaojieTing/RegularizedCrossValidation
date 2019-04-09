@@ -6,6 +6,7 @@
 
 slaver.function <- function(r, task_config){
   if(!is.null(task_config$workdir)) setwd(task_config$workdir)
+  
   dataConf  <- task_config$dataset.conf
   algorConf <- task_config$algorithm1.conf
   cvConf    <- task_config$crossvalidation.conf
@@ -24,10 +25,12 @@ slaver.function <- function(r, task_config){
   WorkerInit(DataPackages)
   WorkerInit(AlgorPackages)
   WorkerInit(CrossValidationPackages)
+  
   crossvalidation.conf <- task_config$crossvalidation.conf
   task.conf.n1 <- crossvalidation.conf$n1
   task.conf.n <- crossvalidation.conf$n
   task.conf.overlapCount <- task_config$overlap_count
+  
   #开始生成相应的损失
   #set.seed(r) 
   dataset.conf <- task_config$dataset.conf
@@ -59,6 +62,7 @@ slaver.function <- function(r, task_config){
   pe.first  <- TrainAndTestForHoldoutEstimator(dataset.observants, partition.first, AlgorGenerator, algorConf)    
   pe.second <- TrainAndTestForHoldoutEstimator(dataset.observants, partition.second, AlgorGenerator, algorConf)    
   values <- c( pe.first[[2]],  pe.second[[2]])
+  
   # 生成要检验的第二个算法
   if(!is.null(task_config$algorithm2.conf)) {
     algorConf2<- task_config$algorithm2.conf
@@ -197,6 +201,7 @@ covariance_simulation.task_config_validation <- function(task_config) {
   if (is.null(task_config$crossvalidation.conf)) stop("Please specify the cross validation configuration.")
   crossvalidation.conf <- task_config$crossvalidation.conf
   if( "hold_out" != crossvalidation.conf$name) stop("Covariance simulation only support hold-out validation")
+  if(is.null(crossvalidation.conf$n) || is.null(crossvalidation.conf$n1)) stop("Must specify n and n1 options for hold-out config.")
   return(task_config)
 }
 
