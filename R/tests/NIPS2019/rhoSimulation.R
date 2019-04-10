@@ -1,5 +1,8 @@
 # 模拟BRHS中的rho值。
 
+
+# sed -i s/150/20/g `grep 150 -rl --include="rhoWYneco2014Expr2_40_svm.R" ./`
+
 testCovarianceSimulation <- function(nsize) {
   source("tasks/covariance_simulation.R", encoding = "UTF-8")  
   config <- list(
