@@ -7,7 +7,7 @@ var_est_brhs4.EstForOneExpr <- function(mu, veConf) {
   mu.diff <- mu[5]
   ve.val <- 0
   for(idx in 1:4) {
-    ve.val <- ve.val + (mu.vec[idx]-ve.val)^2
+    ve.val <- ve.val + (mu.vec[idx]-mu.diff)^2
   }
   ve.val <- 0.75 * ve.val
   return(ve.val)

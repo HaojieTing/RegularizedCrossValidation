@@ -37,7 +37,8 @@ brhs4_t_test.perform_task <- function(task_config) {
   var.est <- ve.estimator(c(mu.vec.diff, mu.diff.mean), veConf)
   # 计算检验统计量
   test.val <- (mu.diff.mean-delta)/sqrt(3*var.est)
-  test.quantile <- qt(alpha, 3)
+  if(mu.diff.mean-delta == 0) return(1)
+  test.quantile <- qt(1-alpha, 3)
   if(test.val > test.quantile) {
     return(1)
   }

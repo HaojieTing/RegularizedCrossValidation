@@ -10,7 +10,7 @@ task_config <- list(
   dataset.conf = list(
     name = "simNB2003data",
     type = "classification",
-    shortcut_name = "bengio_infer_ml_sim1"
+    shortcut_name = "bengio_infer_ml_sim2"
   ),
   algorithm2.conf = list(
     name = "tree",
@@ -98,10 +98,6 @@ ge.estimator.master <- function(sim_count=10000){
     result
   }
   stopCluster(cl)
-  n.str <- 'default'
-  if(!is.null(n.size)) {
-    n.str <- n.size
-  }
-  write.table(results, file = paste("NIPS2019/", paste("two_gaussian_brhs4",format(Sys.time(), "%Y%m%d%H%M%S"),sep="_"), sep=""))
+  write.table(results, file = paste("NIPS2019/", paste("two_gaussian_sim2_brhs4",format(Sys.time(), "%Y%m%d%H%M%S"),sep="_"), sep=""))
 }
 
