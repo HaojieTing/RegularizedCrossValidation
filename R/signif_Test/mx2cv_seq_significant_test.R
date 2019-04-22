@@ -504,8 +504,6 @@ mx2cv_seq_significant_test.perform_task <- function(task_config) {
       mu_diff_vec <- mu_diff_vec / muv1
     }
     mu_diff <- mean(mu_diff_vec)
-    #print(paste(cur_m, mu_diff))
-    #print(mu_diff_vec)
     # 计算机器学习算法性能估计的方差估计
     ve.estimator <- loadVarEstForOneExprInfo(veConf$name)
     veConf$m <- cur_m

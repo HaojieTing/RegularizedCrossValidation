@@ -268,6 +268,7 @@ variance_simulation_cv.task_config_validation <- function(task_config) {
   if (is.null(task_config$crossvalidation.conf)) stop("Please specify the cross validation configuration.")
   return(task_config)
 }
+
 library(foreach)
 variance_simulation_cv.perform_task <- function(task_config) {
   rep.tot = task_config$data_rep_cnt * task_config$part_set_rep_cnt
