@@ -15,9 +15,9 @@ task_config <- list(
     )
   ),
   algorithm1.conf = list(
-    name = "classificationTree",
+    name = "regressionTree",
     type = "classification",
-    method = "class"
+    test_method = "class"
   ),
   algorithm2.conf = list(
     name = "firstNearestNeighborhood",

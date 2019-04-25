@@ -13,8 +13,9 @@ task_config <- list(
     shortcut_name = "bengio_infer_ml_sim4"
   ),
   algorithm2.conf = list(
-    name = "tree",
-    type = "classification"
+    name = "regressionTree",
+    type = "classification",
+    test_method="regression"
   ),
   algorithm1.conf = list (
     name = "linearRegrClassifier",

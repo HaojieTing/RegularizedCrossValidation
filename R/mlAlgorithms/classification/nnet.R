@@ -3,25 +3,15 @@ nnet.fit<-function(data_train, algorConf) {
   h_size <- algorConf$h_size  
   data_train[,ncol(data_train)] <- factor(data_train[,ncol(data_train)])
   data_train <- na.omit(data_train)
-
-  del_c <- c()
-  for( i in 1:(ncol(data_train)-1)) {
-    if(length(levels(factor(data_train[, i]))) ==1)
-      del_c <- c(del_c, i)
-  } 
-  if(is.null(del_c) || length(del_c) == 0) {
-    
-  }else   data_train <- data_train[, -del_c]
   formula <- as.formula(paste(colnames(data_train)[ncol(data_train)], '~.', sep=""))
-  fit <- NULL
   weights.count.max <- 10000
   if (!is.null(algorConf$MaxNwts)) {
     weights.count.max <- algorConf$MaxNwts
   }
   if (h_size != 0)
-    fit<-nnet(formula, data=data_train, size=h_size, maxit=200,rang = rang, MaxNWts = weights.count.max, trace=FALSE)
+    fit<-nnet(formula, data=data_train, size=h_size, maxit=200, trace=FALSE)
   else 
-    fit<-nnet(formula, data=data_train, size=h_size, maxit=200,rang = rang, trace=FALSE, skip=TRUE)
+    fit<-nnet(formula, data=data_train, size=0, maxit=200, trace=FALSE, skip=TRUE)
   return(fit)
 }
 
