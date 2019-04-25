@@ -43,9 +43,8 @@ task_config <- list(
     h_size = 0
   ),
   crossvalidation.conf = list(
-    name = "mx2bcv",
-    n = 200,
-    m  = 3
+    name = "rhsbcv",
+    J  = 4
   )
 )
 
@@ -116,5 +115,5 @@ ge.estimator.master <- function(data_tag, hsize,diff=F,sim_count=10000){
     result
   }
   stopCluster(cl)
-  write.table(results, file = paste("NIPS2019/", paste("uci",data_tag, hsize, diff, "3x2bcv", format(Sys.time(), "%Y%m%d%H%M%S"),sep="_"), sep=""))
+  write.table(results, file = paste("NIPS2019/", paste("uci",data_tag, hsize, diff, "brhs4", format(Sys.time(), "%Y%m%d%H%M%S"),sep="_"), sep=""))
 }

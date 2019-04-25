@@ -12,7 +12,8 @@
 rhsbcv.Generator <- function(cvConf) {
   if (is.null(cvConf$data)) stop("Please specify cv$data.")
   n <- nrow(cvConf$data)
-  n1 <- cvConf$n1
+  if(!is.null(cvConf$n1)) n1 <- cvConf$n1
+  else n1 <- round(n/2)
   J <- cvConf$J
   n2 <- n - n1
   partitions <- vector("list", J)  
@@ -58,7 +59,6 @@ rhsbcv.validation <- function(cvConf) {
   valid <- TRUE
   if(is.null(cvConf$n1)) {
     warning("not provide n1")
-    valid <- FALSE
   }
   if(is.null(cvConf$J)) {
     warning("not provide J")
