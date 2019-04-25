@@ -1,5 +1,4 @@
 nnet.fit<-function(data_train, algorConf) {
-  rang <- algorConf$range
   h_size <- algorConf$h_size  
   data_train[,ncol(data_train)] <- factor(data_train[,ncol(data_train)])
   data_train <- na.omit(data_train)
@@ -35,7 +34,6 @@ nnet.Prepackages <- c("nnet")
 
 
 nnet.validation <- function(algorConf) {
-  if( is.null(algorConf$range) ) return(FALSE)
   if( is.null(algorConf$h_size) ) return(FALSE)
   if (is.null(algorConf$MaxNwts)) {
     warning("You could tune param MaxNwts when error 'too many weights' error is thorw out.")
