@@ -1,4 +1,5 @@
-tree.fit <-function(data_train, algorConf)
+
+regressionTree.fit <-function(data_train, algorConf)
 {
   if(!is.null(algorConf$test_method) && algorConf$test_method=="regression") {
     # 只是用level为0,1的二分类
@@ -8,7 +9,8 @@ tree.fit <-function(data_train, algorConf)
   return(fit)
 }
 
-tree.predict<-function(fit, data_test, algorConf)
+
+regressionTree.predict<-function(fit, data_test, algorConf)
 {
   data <- data_test
   pre <- NA
@@ -18,20 +20,22 @@ tree.predict<-function(fit, data_test, algorConf)
     pre  <- predict(fit, data)
     pre  <- as.numeric(pre > 0.5)
   }  
-  print(pre)
   return(pre)
 }
 
 
-tree.TrainAndTest <- function(data_train,data_test, algorConf) { 
-  model <- tree.fit(data_train, algorConf)
-  pre   <- tree.predict(model, data_test, algorConf)
+regressionTree.TrainAndTest <- function(data_train,data_test, algorConf) { 
+  model <- regressionTree.fit(data_train, algorConf)
+  pre   <- regressionTree.predict(model, data_test, algorConf)
   return(pre)
 }
 
-tree.Prepackages <- c("tree")
 
-tree.validation <- function(algorConf) {
+
+regressionTree.Prepackages <- c("tree")
+
+
+regressionTree.validation <- function(algorConf) {
   if( is.null(algorConf$test_method) ) {
     warning("test_method is not set.")
     return(FALSE)

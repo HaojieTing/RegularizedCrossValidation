@@ -4,6 +4,7 @@ rpart.fit<-function(data_train, algorConf) {
   if("class" == algorConf$method) {    
     fit <- rpart(as.formula(paste(colnames(data_train)[ncol(data_train)], '~.', sep="")), data = data_train, control = NULL, method="class")    
   } else if("anova" == algorConf$method) {    
+    data_train[,ncol(data_train)] <- as.numeric(data_train[,ncol(data_train)])-1
     fit<-rpart(as.formula(paste(colnames(data_train)[ncol(data_train)], '~.', sep="")), data = data_train, method="anova")
   } else {
     stop("other method config for classification tree is not support")
@@ -20,7 +21,6 @@ rpart.predict<-function(fit, data_test, algorConf){
     pre<-stats::predict(fit, data_test, type="class")    
   } else if("anova" == method) {  
     pre_tmp<-predict(fit, data_test)
-    #pre_tmp<-stats::predict(fit, x)    
     pre <- rep(NA, length(pre_tmp))
     for(i in 1:length(pre_tmp)) {
       if(is.na(pre_tmp[i])) pre_tmp[i] <- 0
@@ -30,7 +30,7 @@ rpart.predict<-function(fit, data_test, algorConf){
   } else {
     stop(paste("not support:", method))
   }  
-  return(pre)
+  return(factor(pre))
 }
 
 
