@@ -4,7 +4,7 @@
 # E-mail: wangruibo@sxu.edu.cn
 # Date: 2017/10/25
 
-uci_ironosphere.DataGenerator <- function(dataset.conf) {
+uci_ionosphere.DataGenerator <- function(dataset.conf) {
   data.set <- GetExternalDataSet('ironosphere', header = T)
   data.set[,35] <- factor(data.set[,35])
   if(!is.null(dataset.conf$samplingConf)) {
@@ -15,8 +15,8 @@ uci_ironosphere.DataGenerator <- function(dataset.conf) {
   return(data.set)
 }
 
-uci_ironosphere.PrePackages <- c()
+uci_ionosphere.PrePackages <- c()
 
-uci_ironosphere.validation <- function(dataset.conf){
+uci_ionosphere.validation <- function(dataset.conf){
   return(TRUE)
 }

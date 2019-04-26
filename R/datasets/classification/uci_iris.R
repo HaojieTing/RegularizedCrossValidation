@@ -8,8 +8,8 @@
 
 uci_iris.DataGenerator <- function(dataConf){
   iris.data.set <- GetExternalDataSet('iris', header = T)
-  iris.x.all <- iris[, -5]
-  iris.y     <- iris[, 5]
+  iris.x.all <- iris.data.set[, -5]
+  iris.y     <- iris.data.set[, 5]
   iris.y <- factor(iris.y)
   iris.data.set <- as.data.frame(cbind(iris.x.all, iris.y)) 
   if(!is.null(dataConf$samplingConf)) {
