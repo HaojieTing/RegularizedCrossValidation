@@ -8,8 +8,8 @@
 
 uci_seed.DataGenerator <- function(dataConf){
   seed.data.set <- GetExternalDataSet('seed')
-  seed.x.all <- seed[, -8]
-  seed.y <- seed[, 8]
+  seed.x.all <- seed.data.set[, -8]
+  seed.y <- seed.data.set[, 8]
   seed.y <- factor(seed.y)
   seed.data.set <- as.data.frame(cbind(seed.x.all, seed.y))
   if(!is.null(dataConf$samplingConf)) {
