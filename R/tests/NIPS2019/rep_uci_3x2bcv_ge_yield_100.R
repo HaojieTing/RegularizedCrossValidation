@@ -24,23 +24,49 @@ datasets.configs <- list(
     type = "classification"
   ),
   ionosphere = list(
-    
+    name = "uci_ionosphere",
+    type = "classification"
   ),
   iris = list(
     name = "uci_iris",
     type = "classification"
   ),
-  vowel = list(
-    name = "uci_vowel",
+  vehicle = list(
+    name = "uci_vehicle",
+    type = "classification"
+  ),
+  wine = list(
+    name = "uci_wine",
+    type = "classification"
+  ),
+  yeast = list(
+    name = "uci_yeast",
     type = "classification"
   ),
   seed = list(
     name = "uci_seed",
     type = "classification"
+  )
+)
+
+
+task_config <- list(
+  # 数据集配置根据用户参数进行自动填充。
+  algorithm3.conf = list(
+    name = "regressionTree",
+    type = "classification",
+    test_method = "class"
   ),
-  
-  balance = list(
-    name = "uci_balance",
+  algorithm2.conf = list(
+    name = "LinearDiscriminantAnalysis",
     type = "classification"
+  ),
+  algorithm1.conf = list (
+    name = "naiveBayes",
+    type = "classification"
+  ),
+  crossvalidation.conf = list(
+    name = "rhsbcv",
+    J  = 4
   )
 )
