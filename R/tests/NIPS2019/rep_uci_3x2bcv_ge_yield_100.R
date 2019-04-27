@@ -130,8 +130,6 @@ ge.estimator.master <- function(data_tag, sim_count=100){
   datasetconfig <- datasets.configs[[data_tag]]
   if(is.null(datasetconfig)) stop("No exists data tag")
   task_config$dataset.conf <- datasetconfig
-  if(diff==T)  task_config$algorithm1.conf$h_size <- hsize
-  task_config$algorithm2.conf$h_size <- hsize
   task_config$dataset.conf <- ValidateAndResolveDataSetConfiguration(task_config$dataset.conf)
   task_config$algorithm1.conf <- ValidateAndResolveAlgorithmConfiguration(task_config$algorithm1.conf)
   task_config$algorithm2.conf <- ValidateAndResolveAlgorithmConfiguration(task_config$algorithm2.conf)
