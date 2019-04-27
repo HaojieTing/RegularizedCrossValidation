@@ -66,9 +66,8 @@ task_config <- list(
     type = "classification"
   ),
   crossvalidation.conf = list(
-    name = "mx2bcv",
-    n = 200,
-    m  = 3
+    name = "rhsbcv",
+    J  = 4
   )
 )
 
