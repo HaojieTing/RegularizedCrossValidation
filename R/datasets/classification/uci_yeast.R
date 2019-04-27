@@ -10,6 +10,7 @@
 uci_yeast.DataGenerator <- function(dataConf){
   yeast.data.set <- GetExternalDataSet('yeast')
   yeast.x.all <- yeast.data.set[, 2:9]
+  yeast.x.all <- yeast.x.all[,-5]
   yeast.y <- yeast.data.set[, 10]
   binarize <- dataConf$binarize
   if(! is.null(binarize) && binarize == TRUE) {
