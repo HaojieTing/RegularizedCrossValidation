@@ -1,6 +1,5 @@
 # 计算BRHS4在高斯数据集上的检验结果
 
-
 brhs_task_config <- list(
   alpha = 0.05,
   delta = 0,
@@ -12,8 +11,6 @@ brhs_task_config <- list(
 ge_file_path_brhs <- "D:/datasets/Zzzz/letter_brhs4_20190423111053"
 ge_file_path_b3x2cv <- "D:/datasets/Zzzz/letter_3x2bcv_20190423110553"
 
-ge_file_path <- "D:/datasets/Zzzz/two_gaussian_sim4_3x2bcv_20190422215344"
-ge_file_path <- "D:/datasets/Zzzz/two_gaussian_sim2_3x2bcv_20190422214223"
 mu.data <- read.table(ge_file_path)
 
 source("./signif_Test/brhs4_t_test.R", encoding = "UTF-8")

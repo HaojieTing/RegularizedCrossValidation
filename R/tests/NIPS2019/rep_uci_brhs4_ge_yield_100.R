@@ -142,7 +142,7 @@ ge.estimator.master <- function(data_tag, sim_count=100){
     result
   }
   stopCluster(cl)
-  write.table(results, file = paste("NIPS2019/", paste("rep_uci",data_tag, "3x2bcv", format(Sys.time(), "%Y%m%d%H%M%S"),sep="_"), sep=""))
+  write.table(results, file = paste("NIPS2019/", paste("rep_uci",data_tag, "brhs4", format(Sys.time(), "%Y%m%d%H%M%S"),sep="_"), sep=""))
 }
 
 
