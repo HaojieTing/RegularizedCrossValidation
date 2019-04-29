@@ -30,7 +30,7 @@ mx2bcv_t_test.perform_task <- function(task_config) {
   mu.vec <- task_config$mu.vec
   alpha  <- task_config$alpha
   veConf <- task_config$var.est.conf
-  m <- task_config$m
+  m <- task_config$var.est.conf$m
   mu.vec.algor1 <- mu.vec[1:(2*m)]
   mu.vec.algor2 <- mu.vec[(2*m+1):(4*m)]
   mu.vec.diff   <- mu.vec[(4*m+1):(6*m)]
@@ -39,9 +39,10 @@ mx2bcv_t_test.perform_task <- function(task_config) {
   ve.estimator <- loadVarEstForOneExprInfo(veConf$name)
   var.est <- ve.estimator(c(mu.vec.diff, mu.diff.mean), veConf)
   # 计算检验统计量
-  test.val <- (mu.diff.mean-delta)/sqrt(var.est)
+  test.val <- abs(mu.diff.mean-delta)/sqrt(var.est)
+  print(paste(mu.diff.mean, var.est, test.val))
   if(mu.diff.mean-delta == 0) return(1)
-  test.quantile <- qt(1-alpha, 2*m-1)
+  test.quantile <- qt(1-alpha/2.0, 2*m-1)
   if(test.val > test.quantile) {
     return(1)
   }

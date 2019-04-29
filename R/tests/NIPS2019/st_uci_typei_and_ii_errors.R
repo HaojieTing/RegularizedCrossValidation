@@ -1,10 +1,10 @@
 # 计算uci5个数据上的第一类错误和第二类错误。
-source("./signif_Test/brhs4_t_test.R", encoding="UTF-8")
-source("./signif_Test/mx2bcv_t_test.R", encoding="UTF-8")
-
 perform_brhs_t_test <- function(file.name) {
+  source("./signif_Test/brhs4_t_test.R", encoding="UTF-8")
   data.set <- read.table(file.name)
+  decision <- c()
   for(i in 1:nrow(data.set)){
+    if(i%% 1000==0) cat(i, "...")
     brhs_task_config <- list(
       alpha = 0.05,
       delta = 0,
@@ -21,8 +21,11 @@ perform_brhs_t_test <- function(file.name) {
 }
 
 perform_b3x2_t_test <- function(file.name) {
+  source("./signif_Test/mx2bcv_t_test.R", encoding="UTF-8")
   data.set <- read.table(file.name)
+  decision <- c()
   for(i in 1:nrow(data.set)){
+    if(i%% 1000==0) cat(i, "...")
     b3x2cv_task_config <- list(
       alpha = 0.05,
       delta = 0,
@@ -45,7 +48,7 @@ counts.hidden <- c(3,5,10,20)
 file.names <- list.files("D:/datasets/Zzzz/")
 for(data.tag in uci_five_datasets) {
   for(count.hidden in counts.hidden) {
-    for(sgl in c("TRUE", "FALSE")) {
+    for(sgl in c("FALSE", "TRUE")) {
       for(test_method in c("3x2bcv", "brhs4")) {
         str.prefix <- paste("uci", data.tag, count.hidden, sgl, test_method, sep = "_")
         finded.filename <- NULL
@@ -60,12 +63,13 @@ for(data.tag in uci_five_datasets) {
           file.abs.name <- file.path("D:/datasets/Zzzz/", finded.filename)
           print(str.prefix)
           if(test_method == "3x2bcv") {
-            perform_b3x2_t_test(file.abs.name)
+            print(perform_b3x2_t_test(file.abs.name))
           } else {
-            perform_brhs_t_test(file.abs.name)
+            print(perform_brhs_t_test(file.abs.name))
           }
         }
       } 
     }
   }
+  break()
 }
